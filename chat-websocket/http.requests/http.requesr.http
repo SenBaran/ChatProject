@@ -1,0 +1,26 @@
+POST  http://localhost:9000/api/addUser
+Content-Type: application/json
+
+{
+  "username" : "baran"
+}
+###
+POST  http://localhost:9000/api/addUser
+Content-Type: application/json
+
+{
+  "username" : "neu"
+}
+###
+POST  http://localhost:9000/api/addRoom
+Content-Type: application/json
+
+{
+}
+
+###
+
+GET http://localhost:9000/api/message/deleteUser/1
+
+###
+GET http://localhost:9000/api/message/getUserByUsername/yunus
