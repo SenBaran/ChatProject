@@ -12,21 +12,23 @@ import { WebsocketService } from '../../services/websocket.service';
 export class ChatComponent{
   public msg = "";
   public username = "";
+  public isUserConnected = false;
   public chat : string[] = [];
 
   constructor(private ws : WebsocketService, public hs : HttpService){}
 
   public async ngOnInit(){
       this.ws.chatUpdated.subscribe(item => this.updateChat(item));
+      this.ws.connected.subscribe(item => this.isUserConnected = item);
       await this.hs.initData();
       this.hs.messages.forEach(element => {
-      this.updateChat("["+ element.timestamp +" ]"+element.username + " : " + element.message);
+      this.updateChat("["+ element.timestamp +"] "+element.username + " >>> " + element.message);
       });
   }
 
   public openWebSocket() : void {
     console.log(this.username);
-    this.ws.openWebSocket(this.username);
+    this.ws.ngopenWebSocket(this.username);
 
   }
 
@@ -46,5 +48,9 @@ export class ChatComponent{
 
   public saveUsername() : void{
     this.openWebSocket();
+  }
+
+  public disconnectChat() : void{
+    this.closeWebSocket();
   }
 }

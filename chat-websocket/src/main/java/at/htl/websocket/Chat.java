@@ -27,15 +27,18 @@ public class Chat{
     @OnOpen
     public void onOpen(Session session, @PathParam("username") String username) {
         var chatUser = repository.getUserByUsername(username);
-        if(chatUser!= null){
-            sessions.put(username, session);
-        }
+        sessions.put(username, session);
+
+
+        broadcast("User " + username + " joined");
+
     }
 
     @OnClose
     public void onClose(Session session, @PathParam("username") String username) {
         var chatUser = repository.getUserByUsername(username);
         sessions.remove(username);
+        broadcast("User " + username + " left the Chat");
     }
 
     @OnError
@@ -47,12 +50,15 @@ public class Chat{
     @OnMessage
     public void onMessage(String message, @PathParam("username") String username) {
         var chatUser = repository.getUserByUsername(username);
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
+        String formatDateTime = LocalDateTime.now().format(formatter);
         Message messageObject = new Message();
         messageObject.setTimestamp(LocalDateTime.now());
         messageObject.setMessage(message);
         messageObject.setUsername(username);
         repository.addMessage(messageObject);
-        broadcast("["+ messageObject.getTimestamp() +" ]"+username + ": " + message);
+        broadcast("["+ formatDateTime + " ]" + username + ": " + message);
     }
 
     private void broadcast(String message) {

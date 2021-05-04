@@ -9,7 +9,7 @@ export class WebsocketService {
   @Output() chatUpdated = new EventEmitter<string>();
   @Output() connected = new EventEmitter<boolean>();
 
-  public openWebSocket(username : string){
+  public ngopenWebSocket(username : string){
     this.websocket = new WebSocket(this.url + username);
 
     this.websocket.onopen = (event) => this.connected.emit(true);
