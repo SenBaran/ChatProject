@@ -1,9 +1,8 @@
-import { Message } from "./message";
-
 export class ChatUser {
     constructor(
-        public id : number = 0,
+        public user_id : number = 0,
+        public firstname : string,
+        public lastname : string,
         public username : string,
-        public messages : Message[] = [],
     ){}
 }

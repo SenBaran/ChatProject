@@ -1,29 +1,45 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
+import { stringify } from '@angular/compiler/src/util';
 import { Injectable } from '@angular/core';
-import { ChatUserDto } from '../dtos/chat-user-dto';
 import { ChatUser } from '../entities/user';
-import { Message } from '../entities/message';
-import { MessageDto } from '../dtos/message-dto';
 
+
+
+const httpOptions = {
+  headers: new HttpHeaders({
+    'Content-Type': 'application/x-www-form-urlencoded',
+  })
+};
 
 @Injectable({
   providedIn: 'root'
 })
 export class HttpService {
-  public users : ChatUser[] = [];
-  public messages : Message[] = [];
-  
-  private hs : HttpClient;
-  public loggedInChatUser : ChatUser;
-  private url = "http://localhost:9000/api/";
-  constructor(hs : HttpClient ) { 
-    this.hs = hs;
+
+  private hs: HttpClient;
+  public otherUser : ChatUser;
+  constructor(hs: HttpClient) { this.hs = hs }
+  private url = "http://devapi.xtechnik.com";
+  public loggedInUsername: string = "";
+
+  public async getUserByUserName(username: String) {
+    this.otherUser = await this.hs.get<ChatUser>(this.url + "/user/byUsername/" + username).toPromise();
+    console.log(this.otherUser);
+
   }
 
-  public async initData(){
-    this.messages = await this.hs.get<Message[]>(this.url + "getAllMessages").toPromise();
+  public async login(eMail: string, password: string) {
 
-    
+    var data = {
+      email: eMail,
+      password: password
+    };
+
+    console.log(data);
+
+    await this.hs.post(this.url + "/user/login", data, httpOptions).subscribe();
+    this.loggedInUsername = eMail;
+    return true;
   }
 
 }

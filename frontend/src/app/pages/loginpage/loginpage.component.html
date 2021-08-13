@@ -1,0 +1,13 @@
+<app-navbar></app-navbar>
+<form class="center">
+  <mat-form-field class="login-form-field" color="warn">
+    <mat-label>Username</mat-label>
+    <input matInput [(ngModel)]="username" name="username" >
+  </mat-form-field>
+
+  <mat-form-field class="login-form-field" color="warn">
+    <mat-label>Password</mat-label>
+    <input matInput [(ngModel)]="password" name="password" type="password">
+  </mat-form-field>
+  <button class="clcon" mat-stroked-button class="login-form-field" color="warn" (click)="checkUser()">Login</button>
+</form>

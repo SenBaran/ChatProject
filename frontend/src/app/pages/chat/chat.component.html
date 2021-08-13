@@ -1,17 +1,34 @@
-<app-navbar></app-navbar>
-<mat-form-field class="mat-form-field" color="warn"> 
-  <mat-label>Enter Username</mat-label>
-  <input  matInput [(ngModel)]="username" name="username">
-</mat-form-field>
-<button [disabled]="isUserConnected" class="mat-form-field" mat-stroked-button color="warn" (click)="saveUsername()">Set Username</button>
-<div [hidden]="false" class="chat">
-  <form>
-    <mat-card *ngFor="let item of chat">{{item}}</mat-card> 
-    <mat-form-field class="mat-form-field" color="warn"> 
-      <mat-label>Message</mat-label>
-      <input matInput [(ngModel)]="msg" name="message">
-    </mat-form-field>
-    <button class="mat-form-field" mat-stroked-button color="warn" (click)="sendMsg()">Send Message</button>
-    <button [disabled]="!isUserConnected" class="mat-form-field" mat-stroked-button color="warn" (click)="disconnectChat()">Disconnect</button>
-  </form>  
-</div>
+<mat-sidenav-container class="example-container">
+  <mat-sidenav class="sideNav" mode="side" opened>
+    <mat-action-list>
+    <mat-list-item *ngFor="let user of users">
+      <mat-icon>account_circle</mat-icon>
+      <button mat-list-item (click)="startChat()"> {{user.username}} </button>
+
+    </mat-list-item>
+    </mat-action-list>
+    
+  </mat-sidenav>
+  <mat-sidenav-content>
+    <div>
+      <mat-form-field class="mat-form-field" color="warn">
+        <mat-label>Enter Username</mat-label>
+        <input matInput [(ngModel)]="username" name="username">
+      </mat-form-field>
+      <button class="mat-form-field" mat-stroked-button color="warn"
+        (click)="saveUsername()">Search for User</button>
+      <div [hidden]="false" class="chat">
+        <form>
+          <mat-card *ngFor="let item of chat">{{item}}</mat-card>
+          <mat-form-field class="mat-form-field" color="warn">
+            <mat-label>Message</mat-label>
+            <input matInput [(ngModel)]="msg" name="message">
+          </mat-form-field>
+          <button class="mat-form-field" mat-stroked-button color="warn" (click)="sendMsg()">Send Message</button>
+
+        </form>
+      </div>
+    </div>
+
+  </mat-sidenav-content>
+</mat-sidenav-container>

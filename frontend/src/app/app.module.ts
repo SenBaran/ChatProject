@@ -51,12 +51,14 @@ import { AppRoutingModule } from './app-routing.module';
 import { ChatComponent } from './pages/chat/chat.component';
 import { HttpService } from './services/http.service';
 import { NavbarComponent } from './components/navbar/navbar.component';
+import { LoginpageComponent } from './pages/loginpage/loginpage.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     ChatComponent,
     NavbarComponent,
+    LoginpageComponent,
   ],
   imports: [
     BrowserModule,
