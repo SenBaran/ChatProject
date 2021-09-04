@@ -24,8 +24,7 @@ export class HttpService {
 
   public async getUserByUserName(username: String) {
     this.otherUser = await this.hs.get<ChatUser>(this.url + "/user/byUsername/" + username).toPromise();
-    console.log(this.otherUser);
-
+    
   }
 
   public async login(eMail: string, password: string) {
@@ -40,6 +39,23 @@ export class HttpService {
     await this.hs.post(this.url + "/user/login", data, httpOptions).subscribe();
     this.loggedInUsername = eMail;
     return true;
+
+  }
+
+  public async saveMessagePHPBackend(roomId: Number, fromUsername : String, message: String, loggedInUsername: string, nowDate2: string) {
+    
+    var data = {
+      roomId: roomId,
+      fromUsername: fromUsername,
+      toUsername: loggedInUsername,
+      message: message,
+      timestamp: nowDate2
+    };
+    console.log(data);
+
+
+    await this.hs.post(this.url + "/message/saveMessage", data, httpOptions).toPromise();
+
   }
 
 }

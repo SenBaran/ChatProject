@@ -74,7 +74,6 @@ public class Chat{
 
         ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
         String json = ow.writeValueAsString(message);
-        System.out.println(toUsername);
         sessions.forEach((s, session) -> {
             if(s.equals(toUsername) || s.equals(message.getUsername())){
                 session.getAsyncRemote().sendObject(json, result ->  {
