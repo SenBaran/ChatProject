@@ -14,47 +14,64 @@ const httpOptions = {
 @Injectable({
   providedIn: 'root'
 })
+
 export class HttpService {
+
+
+
 
   private hs: HttpClient;
   public otherUser : ChatUser;
   constructor(hs: HttpClient) { this.hs = hs }
   private url = "http://devapi.xtechnik.com";
   public loggedInUsername: string = "";
+  public loggedInUserId : string = "";
+  public messages = [];
+
+
+  public async getUserById(userId : Number){
+    return await this.hs.get(this.url + "/user/byId/" + userId).toPromise();
+  }
+
+
+  public async getAllMessages(userId : Number) {
+    return await this.hs.get(this.url + "/message/getAllMessages/" + userId).toPromise();
+  }
 
   public async getUserByUserName(username: String) {
     this.otherUser = await this.hs.get<ChatUser>(this.url + "/user/byUsername/" + username).toPromise();
-    
+
   }
 
   public async login(eMail: string, password: string) {
 
-    var data = {
-      email: eMail,
-      password: password
-    };
-
-    console.log(data);
-
-    await this.hs.post(this.url + "/user/login", data, httpOptions).subscribe();
+    let body = new URLSearchParams();
+    body.set('email', eMail);
+    body.set('password', password);
+    var loggedInData = await this.hs.post(this.url + "/user/login", body.toString(), httpOptions).toPromise();
     this.loggedInUsername = eMail;
+
+    var dataExtract = loggedInData["data"];
+    this.loggedInUserId = dataExtract["user_id"];
+
+    console.log(dataExtract);
+    console.log(this.loggedInUserId); 
     return true;
 
   }
 
-  public async saveMessagePHPBackend(roomId: Number, fromUsername : String, message: String, loggedInUsername: string, nowDate2: string) {
+  public async saveMessagePHPBackend(roomId: Number, otherUserId : Number, message: String, loggedInUserId: Number , nowDate2: string) {
     
-    var data = {
-      roomId: roomId,
-      fromUsername: fromUsername,
-      toUsername: loggedInUsername,
-      message: message,
-      timestamp: nowDate2
-    };
-    console.log(data);
+
+    let body = new URLSearchParams();
+    body.set('roomId', String(roomId));
+    body.set('senderUserId', String(loggedInUserId));
+    body.set('recieverUserId', String(otherUserId));
+    body.set('message', String(message));
+    body.set('timestamp', nowDate2);
 
 
-    await this.hs.post(this.url + "/message/saveMessage", data, httpOptions).toPromise();
+    await this.hs.post(this.url + "/message/saveMessage", body.toString(), httpOptions).toPromise();
 
   }
 

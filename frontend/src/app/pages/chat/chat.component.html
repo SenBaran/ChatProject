@@ -1,39 +1,58 @@
+
 <mat-sidenav-container class="example-container">
   <mat-sidenav class="sideNav" mode="side" opened>
-    <mat-action-list>
-    <mat-list-item *ngFor="let user of users">
-      <mat-icon>account_circle</mat-icon>
-      <button mat-list-item (click)="startChat(user)"> {{user}} </button>
+    <mat-tab-group>
+      <mat-tab class="chats_tab">
+        <ng-template mat-tab-label>
+          <mat-icon class="example-tab-icon">chat</mat-icon>
+        </ng-template>
+        <mat-action-list>
+          <mat-list-item *ngFor="let user of users">
+            <mat-icon class="users_icon">wechat</mat-icon>
+            <button class="users_btn" mat-list-item (click)="startChat(user)"> {{user}} </button>
+          </mat-list-item>
+          </mat-action-list>
+      </mat-tab>
+      <mat-tab>
+        <ng-template mat-tab-label>
+          <mat-icon class="example-tab-icon">contacts</mat-icon>
+        </ng-template>
 
-    </mat-list-item>
-    </mat-action-list>
+      </mat-tab>
+       <mat-tab>
+          <ng-template mat-tab-label>
+            <mat-icon class="example-tab-icon">settings</mat-icon>
+          </ng-template>  
+        </mat-tab>
+    </mat-tab-group>
+
     
   </mat-sidenav>
   <mat-sidenav-content>
     <div>
-      <mat-form-field class="mat-form-field" color="warn">
+      <mat-form-field class="mat-form-field">
         <mat-label>Enter Username</mat-label>
         <input matInput [(ngModel)]="username" name="username">
       </mat-form-field>
       <button class="mat-form-field" mat-stroked-button color="warn"
         (click)="saveUsername()">Search for User</button>
-      <div [hidden]="false" class="chat">
-        <form>
-          <mat-card *ngFor="let item of chat">{{item}}</mat-card>
-          <mat-form-field class="mat-form-field" color="warn">
-            <mat-label>Message</mat-label>
-            <input matInput [(ngModel)]="msg" name="message">
-          </mat-form-field>
-          <!--<button class="mat-form-field" mat-stroked-button color="warn" (click)="sendMsg()">Send Message</button>
-          <mat-icon>send</mat-icon>-->
-          <button class="mat-form-field" color="warn" (click)="sendMsg()" mat-button>   
-            Senden
-            <mat-icon>send</mat-icon>
-          </button>
+    
+        <div [hidden]="false" class="chat">
+            <form>
+              <mat-card class="message-card">
+                <mat-card class="single_message_card" *ngFor="let item of chat">{{item}}</mat-card>
+                <mat-form-field class="mat-form-field" color="warn">
+                  <mat-label class="msg_label">Message</mat-label>
+                  <input matInput [(ngModel)]="msg" name="message">
+                </mat-form-field>
+            </mat-card>
+              <button class="send_btn" (click)="sendMsg()" mat-button>   
+                Senden
+                <mat-icon>send</mat-icon>
+              </button>
+            </form>
+        </div>
 
-
-        </form>
-      </div>
     </div>
 
   </mat-sidenav-content>
