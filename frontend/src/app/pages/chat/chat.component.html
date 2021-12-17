@@ -9,7 +9,7 @@
         <mat-action-list>
           <mat-list-item *ngFor="let user of users">
             <mat-icon class="users_icon">wechat</mat-icon>
-            <button class="users_btn" mat-list-item (click)="startChat(user)"> {{user}} </button>
+            <button class="users_btn" mat-list-item (click)="startChat(user)"> {{user.firstname}} {{user.lastname}} </button>
           </mat-list-item>
           </mat-action-list>
       </mat-tab>
@@ -17,7 +17,28 @@
         <ng-template mat-tab-label>
           <mat-icon class="example-tab-icon">contacts</mat-icon>
         </ng-template>
-
+        <form class="example-form">
+          <mat-form-field class="example-full-width" appearance="fill">
+            <mat-label>Benutzersuche</mat-label>
+            <input type="text"
+                   placeholder="Suche"
+                   aria-label="Benutzersuche"
+                   matInput
+                   [formControl]="myControl"
+                   [matAutocomplete]="auto">
+            <mat-autocomplete #auto="matAutocomplete">
+              <mat-option *ngFor="let option of filteredOptions | async" [value]="option.username" >
+                {{option.username}}
+              </mat-option>
+            </mat-autocomplete>
+          </mat-form-field>
+        </form>
+        <mat-action-list>
+          <mat-list-item *ngFor="let user of allUsersInContactList">
+            <mat-icon class="users_icon">wechat</mat-icon>
+            <button class="users_btn" mat-list-item (click)="startChat(user.username)"> {{user.username}} </button>
+          </mat-list-item>
+          </mat-action-list>
       </mat-tab>
        <mat-tab>
           <ng-template mat-tab-label>
@@ -30,14 +51,8 @@
   </mat-sidenav>
   <mat-sidenav-content>
     <div>
-      <mat-form-field class="mat-form-field">
-        <mat-label>Enter Username</mat-label>
-        <input matInput [(ngModel)]="username" name="username">
-      </mat-form-field>
-      <button class="mat-form-field" mat-stroked-button color="warn"
-        (click)="saveUsername()">Search for User</button>
-    
         <div [hidden]="false" class="chat">
+          <mat-card></mat-card>
             <form>
               <mat-card class="message-card">
                 <mat-card class="single_message_card" *ngFor="let item of chat">{{item}}</mat-card>
