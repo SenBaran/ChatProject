@@ -7,8 +7,8 @@
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! C:\Users\baran\Desktop\chat_xt\ChatProject\frontend\src\custom-theme.scss */"E2ln");
-module.exports = __webpack_require__(/*! C:\Users\baran\Desktop\chat_xt\ChatProject\frontend\src\styles.css */"OmL/");
+__webpack_require__(/*! C:\Users\Irepair\Desktop\diplomarbeit_chat\ChatProject\frontend\src\custom-theme.scss */"E2ln");
+module.exports = __webpack_require__(/*! C:\Users\Irepair\Desktop\diplomarbeit_chat\ChatProject\frontend\src\styles.css */"OmL/");
 
 
 /***/ }),

@@ -7,7 +7,7 @@
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! C:\Users\baran\Desktop\chat_xt\ChatProject\frontend\src\polyfills.ts */"hN/g");
+module.exports = __webpack_require__(/*! C:\Users\Irepair\Desktop\diplomarbeit_chat\ChatProject\frontend\src\polyfills.ts */"hN/g");
 
 
 /***/ }),

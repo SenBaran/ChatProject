@@ -28,7 +28,8 @@ export class ChatComponent {
   public allUsersInContactList: ChatUser[] = [];
   public myControl = new FormControl();
   public filteredOptions: Observable<ChatUser[]>;
-
+  public currentOtherUser = "";
+  public loggedInUserId;
 
   constructor(private ws: WebsocketService, public hs: HttpService) { }
 
@@ -44,7 +45,7 @@ export class ChatComponent {
       startWith(''),
       map(value => this._filter(value)),
     );
-
+    this.loggedInUserId = this.hs.loggedInUserId;
   }
 
 
@@ -137,11 +138,13 @@ export class ChatComponent {
           this.currentRoom = room;
           this.chat = this.currentRoom.chat;
           this.hs.getUserByUserName(clickedUser.username);
+          this.currentOtherUser = clickedUser.firstname +" "+ clickedUser.lastname;
         } else {
           this.loadAllMessages(room.roomId)
           this.currentRoom = room;
           this.chat = this.currentRoom.chat;
           this.hs.getUserByUserName(clickedUser.username);
+          this.currentOtherUser = clickedUser.firstname +" "+ clickedUser.lastname;
         }
 
       }else{
@@ -151,6 +154,7 @@ export class ChatComponent {
         this.currentRoom = newRoom;
         this.users.push(newUser);
         this.chat = this.currentRoom.chat;
+        this.currentOtherUser = clickedUser.firstname +" "+ clickedUser.lastname;
 
       }
     }
@@ -212,10 +216,12 @@ export class ChatComponent {
       this.allRooms.forEach(oneRoom => {
         if (oneRoom.roomId == roomId) {
           for (let i = 0; i < allMessages.length; i++) {
-            oneRoom.chat.push(allMessages[i]["message"]);
+            oneRoom.chat.push(new Message(allMessages[i]["message"], allMessages[i]["sender_user_id"]));
           }
         }
       });
+
+      console.log(this.allRooms)
     }
 
   }

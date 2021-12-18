@@ -52,19 +52,39 @@
   <mat-sidenav-content>
     <div>
         <div [hidden]="false" class="chat">
-          <mat-card></mat-card>
-            <form>
+          <mat-card class="info_header">
+            <div style="font-size: medium; color: white; font-family: Verdana, Geneva, Tahoma, sans-serif;">
+              <input hidden="true" matInput [(ngModel)]="currentOtherUser" name="currentOtherUser">
+              {{currentOtherUser}}
+            </div>
+          </mat-card>
+             <form>
               <mat-card class="message-card">
-                <mat-card class="single_message_card" *ngFor="let item of chat">{{item}}</mat-card>
-                <mat-form-field class="mat-form-field" color="warn">
+                <div *ngFor="let item of chat">
+                  <div *ngIf="item.username != loggedInUserId">
+                    <div style="text-align:left;">
+                      <mat-card class="chatCard" >{{item.message}}</mat-card>
+                    </div>
+                  </div>
+
+                  <div *ngIf="item.username == loggedInUserId">
+                    <div style="text-align:right;">
+                      <mat-card class="chatCard">{{item.message}}</mat-card>
+                    </div>
+                  </div>
+
+
+                </div>
+                <mat-form-field class="mat-form-field" >
                   <mat-label class="msg_label">Message</mat-label>
                   <input matInput [(ngModel)]="msg" name="message">
                 </mat-form-field>
-            </mat-card>
-              <button class="send_btn" (click)="sendMsg()" mat-button>   
-                Senden
-                <mat-icon>send</mat-icon>
-              </button>
+                <button style="background-color: #007aff; font-family: Arial, Helvetica, sans-serif; color:white" (click)="sendMsg()" mat-button>   
+                  <mat-icon>send</mat-icon>
+                  Senden
+                </button>
+              </mat-card>
+
             </form>
         </div>
 
