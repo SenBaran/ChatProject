@@ -1,4 +1,4 @@
-import { Component, OnInit, SystemJsNgModuleLoader } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnInit, SystemJsNgModuleLoader, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { allowedNodeEnvironmentFlags } from 'process';
 import { logging } from 'protractor';
@@ -60,36 +60,45 @@ export class ChatComponent {
   }
 
   public sendMsg(): void {
-    this.ws.sendMessage(this.msg, this.currentRoom.roomUsers[1]);
-    var nowDate = Date.now();
-    this.saveMessageToPHPBackend(this.currentRoom.roomId, this.msg, String(nowDate));
-    this.msg = "";
+
+    if(this.msg.length != 0){
+      this.ws.sendMessage(this.msg, this.currentRoom.roomUsers[1]);
+      var todayDate = Date.now();
+      this.saveMessageToPHPBackend(this.currentRoom.roomId, this.msg, todayDate.toString());
+      this.msg = "";
+    }else{
+      alert("Bitte geben Sie eine Nachricht ein!")
+    }
+
 
   }
 
 
-  private updateChat(newMessageObject: string): void {
+  private async updateChat(newMessageObject: string) {
 
     this.toJSON = JSON.parse(newMessageObject)
-
+    var todayDate = Date.now();
     if (this.allRooms == null) {
       this.allRooms.push(new Room(this.allRooms.length + 1, [this.toJSON["message"]], [this.hs.loggedInUsername, this.toJSON["username"]]));
 
     } else if (this.currentRoom != null && this.currentRoom.roomUsers.includes(this.toJSON["username"]) && this.currentRoom.roomUsers.includes(this.hs.loggedInUsername)) {
 
-      this.currentRoom.chat.push(this.toJSON["message"]);
+      var getUserId = await this.hs.getUserByUserNameForChat(this.toJSON["username"]);
+      console.log(this.toJSON["username"])
+      console.log(getUserId);
+      console.log(todayDate);
+      this.currentRoom.chat.push(new Message(this.toJSON["message"], getUserId["user_id"].toString(), todayDate.toString()));
 
     } else if (!this.checkIfRoomAlreadyExist(this.hs.loggedInUsername, this.toJSON["username"])) {
       console.log("!this.checkIfRoomAlreadyExist(this.hs.loggedInUsername, this.toJSON");
 
-      var newRoom = new Room(this.allRooms.length + 1, [this.toJSON["message"]], [this.hs.loggedInUsername, this.toJSON["username"]]);
-      //createRoom
-      this.allRooms.push(newRoom);
-      this.users.push(this.hs.getUserByUserName(this.toJSON["username"]));
+      this.loadAllRooms();
+      this.users.push(this.hs.getUserByUserNameForChat(this.toJSON["username"]));
 
     } else {
+      var getUserId = await this.hs.getUserByUserNameForChat(this.toJSON["username"]);
       let redirectMessageRoom = this.getCorrectRoomByUsernames(this.hs.loggedInUsername, this.toJSON["username"]);
-      redirectMessageRoom.chat.push(this.toJSON["message"]);
+      redirectMessageRoom.chat.push(new Message(this.toJSON["message"], getUserId["user_id"].toString(), todayDate.toString()));
 
     }
 
@@ -102,10 +111,10 @@ export class ChatComponent {
    * @param message 
    * @param nowDate2 
    */
-  private async saveMessageToPHPBackend(roomId: Number, message: String, nowDate2: string) {
+  private async saveMessageToPHPBackend(roomId: Number, message: String, todayDate : String) {
     console.log(this.hs.otherUser.user_id);
     console.log(this.hs.loggedInUserId);
-    await this.hs.saveMessagePHPBackend(roomId, Number(this.hs.otherUser.user_id), message, Number(this.hs.loggedInUserId), nowDate2);
+    await this.hs.saveMessagePHPBackend(roomId, Number(this.hs.otherUser.user_id), message, Number(this.hs.loggedInUserId), todayDate);
   }
 
 
@@ -148,7 +157,7 @@ export class ChatComponent {
         }
 
       }else{
-        var newUser = this.hs.getUserByUserName(clickedUser.username);
+        var newUser = await this.hs.getUserByUserName(clickedUser.username);
         var newRoom = await this.createRoom(this.hs.loggedInUsername, "");
         this.allRooms.push(newRoom);
         this.currentRoom = newRoom;
@@ -212,11 +221,12 @@ export class ChatComponent {
     var responseData = await this.hs.getAllMessages(Number(roomId));
     var allMessages = responseData["data"];
     console.log(allMessages);
+    console.log(allMessages);
     if(allMessages != null){
       this.allRooms.forEach(oneRoom => {
         if (oneRoom.roomId == roomId) {
           for (let i = 0; i < allMessages.length; i++) {
-            oneRoom.chat.push(new Message(allMessages[i]["message"], allMessages[i]["sender_user_id"]));
+            oneRoom.chat.push(new Message(allMessages[i]["message"], allMessages[i]["sender_user_id"], allMessages[i]["timestamps"]));
           }
         }
       });
@@ -228,6 +238,10 @@ export class ChatComponent {
 
 
   public async loadAllRooms() {
+
+    if(this.allRooms != null){
+      this.allRooms == null
+    }
     var usersList = [];
     var user;
     var allRooms = await this.hs.getAllRoomsByUserId(Number(this.hs.loggedInUserId));
@@ -259,12 +273,11 @@ export class ChatComponent {
 
   public async loadAllUsers() {
     let allUser = await this.hs.getAllUsers();
-    
+    console.log(allUser);
     for(let i = 0; i < allUser.length; i++){
-      this.allUsersInContactList.push(new ChatUser(Number(allUser[i]["user_id"]), "" , "", allUser[i]["username"]));
+      this.allUsersInContactList.push(new ChatUser(Number(allUser[i]["user_id"]), allUser[i]["firstname"] , allUser[i]["lastname"], allUser[i]["username"]));
     }
   }
-
 }
 
 

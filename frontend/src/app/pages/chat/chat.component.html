@@ -36,7 +36,7 @@
         <mat-action-list>
           <mat-list-item *ngFor="let user of allUsersInContactList">
             <mat-icon class="users_icon">wechat</mat-icon>
-            <button class="users_btn" mat-list-item (click)="startChat(user.username)"> {{user.username}} </button>
+            <button class="users_btn" mat-list-item (click)="startChat(user)"> {{user.username}} </button>
           </mat-list-item>
           </mat-action-list>
       </mat-tab>
@@ -63,27 +63,38 @@
                 <div *ngFor="let item of chat">
                   <div *ngIf="item.username != loggedInUserId">
                     <div style="text-align:left;">
-                      <mat-card class="chatCard" >{{item.message}}</mat-card>
+                      <mat-card class="chatCard" style="background-color:grey; color: white; font-family: Arial, Helvetica, sans-serif; font-size: medium;" >
+                        {{item.message}}
+                      </mat-card>  
+                      <div style="margin-left: 10px; font-family: Arial, Helvetica, sans-serif; opacity: 30%; font-size: smaller;">
+                        {{item.timestamp | date: 'dd.MM.yyyy HH:mm'}}  
+                      </div>
+                               
                     </div>
                   </div>
 
                   <div *ngIf="item.username == loggedInUserId">
                     <div style="text-align:right;">
-                      <mat-card class="chatCard">{{item.message}}</mat-card>
+                      <mat-card class="chatCard" style="background-color: #007aff; color: white; font-family: Arial, Helvetica, sans-serif; font-size: medium;">
+                        {{item.message}}
+                      </mat-card>
+                      <div style="margin-left: 10px; font-family: Arial, Helvetica, sans-serif; opacity: 30%; font-size: smaller;">
+                        {{item.timestamp | date: 'dd.MM.yyyy HH:mm'}}  
+                      </div>
                     </div>
                   </div>
 
 
                 </div>
-                <mat-form-field class="mat-form-field" >
-                  <mat-label class="msg_label">Message</mat-label>
-                  <input matInput [(ngModel)]="msg" name="message">
-                </mat-form-field>
-                <button style="background-color: #007aff; font-family: Arial, Helvetica, sans-serif; color:white" (click)="sendMsg()" mat-button>   
-                  <mat-icon>send</mat-icon>
-                  Senden
-                </button>
               </mat-card>
+              <mat-form-field class="mat-form-field" >
+                <mat-label class="msg_label">Message</mat-label>
+                <input matInput [(ngModel)]="msg" name="message">
+              </mat-form-field>
+              <button style="background-color: #007aff; font-family: Arial, Helvetica, sans-serif; color:white" (click)="sendMsg()" mat-button>   
+                <mat-icon>send</mat-icon>
+                Senden
+              </button>
 
             </form>
         </div>

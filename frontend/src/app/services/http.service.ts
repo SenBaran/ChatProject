@@ -52,7 +52,12 @@ export class HttpService {
 
 
   public async getUserByUserName(username: String) {
-    this.otherUser = await this.hs.get<ChatUser>(this.url + "/user/byUsername/" + username).toPromise();
+    return this.otherUser = await this.hs.get<ChatUser>(this.url + "/user/byUsername/" + username).toPromise();
+
+  }
+
+  public async getUserByUserNameForChat(username: String) {
+    return await this.hs.get<ChatUser>(this.url + "/user/byUsername/" + username).toPromise();
 
   }
 
@@ -70,13 +75,13 @@ export class HttpService {
 
   }
 
-  public async saveMessagePHPBackend(roomId: Number, otherUserId : Number, message: String, loggedInUserId: Number , nowDate2: string) {
+  public async saveMessagePHPBackend(roomId: Number, otherUserId : Number, message: String, loggedInUserId: Number, todayDate : String) {
     let body = new URLSearchParams();
     body.set('roomId', String(roomId));
     body.set('senderUserId', String(loggedInUserId));
     body.set('recieverUserId', String(otherUserId));
     body.set('message', String(message));
-    body.set('timestamp', nowDate2);
+    body.set('timestamps', String(todayDate));
 
     await this.hs.post(this.url + "/message/saveMessage", body.toString(), httpOptions).toPromise();
   }
